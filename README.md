@@ -1,2 +1,2 @@
-# updated 22 aug 2018
-random text
+# miniFPL
+To run the code, [click here.](https://repl.it/@sayandhar/miniFPLrepl?lite=1&outputonly=1)
