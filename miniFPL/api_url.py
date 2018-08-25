@@ -9,4 +9,4 @@ DREAM_TEAM_DATA = BASE_URL + 'dream-team/{}'
 # (team id)
 USER_DATA = BASE_URL + 'entry/{}'
 # (gameweek)
-USER_GAMEWEEK_PICKS_DATA = USER_DATA + '/event/{}/picks'
+USER_GAMEWEEK_TEAM_DATA = USER_DATA + '/event/{}/picks'
