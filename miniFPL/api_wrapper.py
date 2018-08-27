@@ -91,6 +91,14 @@ class ExtendedAPI(CoreAPI):
         automatic_subs = self.get_user_gameweek_team_data(team_id,gameweek)['automatic_subs']
         return automatic_subs
 
+    def get_user_gameweek_team_event(self,team_id,gameweek):
+        event = self.get_user_gameweek_team_data(team_id,gameweek)['event']
+        return event
+
+    def get_user_gameweek_team_entry_history(self,team_id,gameweek):
+        entry_history = self.get_user_gameweek_team_data(team_id,gameweek)['entry_history']
+        return entry_history
+
     
     """
     for self.get_user_data()
