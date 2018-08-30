@@ -7,15 +7,22 @@ app = Bottle()
 
 @app.get('/')
 def hello():
-    #team_id = input("Enter the team id: ")
     team_id = request.params.get('team_id')
+    template_env = Environment(loader=FileSystemLoader(searchpath="./"))
+    # if no team_id is present, return the home page
+    if team_id is None:
+        template = template_env.get_template("index.html")
+        template = template.render()
+        return template
+    # else, return the stats for the team_id
+    print(team_id)
     obj = FPL(team_id)
 
     header_names_list = []
     rows_list = []
     table_title_list = []
 
-    user_entry = obj.get_user_entry()
+    user_entry = obj.get_user_entry(team_id)
     entry_history = obj.get_user_gameweek_team_entry_history(team_id,3)
     event = obj.get_user_gameweek_team_event(team_id,3)
     active_chip = obj.get_user_gameweek_team_active_chip(team_id,3)
@@ -31,7 +38,7 @@ def hello():
         "Bank"
         ]
     rows = [[
-        user_entry['player_full_name'],
+        user_entry['player_first_name']+" "+user_entry['player_last_name'],
         user_entry['name'],
         user_entry['player_region_short_iso'],
         "{:,}".format(user_entry['summary_overall_points']),
@@ -79,6 +86,6 @@ def hello():
     template = template_env.get_template("template.html")
     template = template.render(header_names=header_names_list,rows=rows_list,table_titles=table_title_list)
 
-    return(template)
+    return template
 
 app.run()

@@ -21,10 +21,6 @@ class FPL(ExtendedAPI):
     def __init__(self,team_id,gameweek=None):
         if gameweek is None:
             gameweek = self.get_user_entry(team_id)['current_event']
-            # for each in self.get_fpl_events():
-            #     if(each['is_current']==True):
-            #         gameweek = each['id']
-            #         break
         self.gameweek = gameweek
         self.team_id = team_id
 

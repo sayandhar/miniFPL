@@ -59,6 +59,12 @@ class ExtendedAPI(CoreAPI):
     def __init__(self):
         super.__init__()
 
+    def get_default(self,team_id=None,gameweek=None):
+        if team_id is None:
+            team_id = self.team_id
+        # if gameweek is None:
+        #     gameweek = self.gameweek
+        return team_id
 
     """ 
     for self.get_fpl() 
@@ -105,5 +111,4 @@ class ExtendedAPI(CoreAPI):
     """
     def get_user_entry(self,team_id):
         entry = self.get_user_data(team_id)['entry']
-        entry['player_full_name'] = entry['player_first_name']+" "+entry['player_last_name']
         return entry
