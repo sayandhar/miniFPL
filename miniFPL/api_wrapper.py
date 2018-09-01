@@ -112,3 +112,7 @@ class ExtendedAPI(CoreAPI):
     def get_user_entry(self,team_id):
         entry = self.get_user_data(team_id)['entry']
         return entry
+
+    def get_user_leagues(self,team_id):
+        leagues = self.get_user_data(team_id)['leagues']
+        return leagues

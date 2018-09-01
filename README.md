@@ -16,7 +16,9 @@ Listening on http://127.0.0.1:8080/
 Hit Ctrl-C to quit.
 ```
 
-Once the bottle server starts, head over to http://localhost:8080/.
+Once the bottle server starts, head over to http://localhost:8080/. Enter the Team ID and click search.
+
+![Imgur](https://i.imgur.com/wmemD5x.png)
 
 ### Finding your Team ID & League ID
 
