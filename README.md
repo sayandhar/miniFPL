@@ -26,4 +26,4 @@ Once the bottle server starts, head over to http://localhost:8080/. Enter the Te
 - Click on Points tab and check the URL.   
 It'll look something like https://fantasy.premierleague.com/a/team/123456/event/3. Here, 123456 is your fantasy team ID.
 - Click on the Leagues Tab and click on the required league.  
-The URL will be something like https://fantasy.premierleague.com/a/leagues/standings/246824/classic. Here, 246824 is your league ID.
+The URL will be something like https://fantasy.premierleague.com/a/leagues/standings/654321/classic. Here, 654321 is your league ID.
