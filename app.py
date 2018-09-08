@@ -10,11 +10,13 @@ app = Bottle()
 def hello():
     team_id = request.params.get('team_id')
     template_env = Environment(loader=FileSystemLoader(searchpath="./"))
+
     # if no team_id is present, return the home page
     if team_id is None:
         template = template_env.get_template("index.html")
         template = template.render()
         return template
+
     # else, return the stats for the team_id
     obj = FPL(team_id)
 
@@ -22,16 +24,15 @@ def hello():
     left_rows = []
     table_title_list = []
 
-    user_entry = obj.get_user_entry(team_id)
-    gw = obj.get_user_entry(team_id)['current_event']
-    user_leagues = obj.get_user_leagues(team_id)
-    entry_history = obj.get_user_gameweek_team_entry_history(team_id,gw)
-    event = obj.get_user_gameweek_team_event(team_id,gw)
-    active_chip = obj.get_user_gameweek_team_active_chip(team_id,gw)
+    user_entry = obj.get_user_entry()
+    user_leagues = obj.get_user_leagues()
+    entry_history = obj.get_user_gameweek_team_entry_history()
+    event = obj.get_user_gameweek_team_event()
+    active_chip = obj.get_user_gameweek_team_active_chip()
 
-    ################################################################################
-    ## USER INFO
-    ################################################################################
+    """
+    USER INFO
+    """
     header_names = ["Name","Team","Region","Overall Pts","Overall Rank","Value","Bank"]
     rows = [[
         user_entry['player_first_name']+" "+user_entry['player_last_name'],
@@ -46,10 +47,9 @@ def hello():
     left_rows.append(rows)
     table_title_list.append("User Details")
 
-    ################################################################################
-    ## GAMEWEEK
-    ################################################################################
-    active_chip_name={"wildcard":"Wildcard","freehit":"Free Hit","bboost":"Bench Boost","3xc":"Triple Captain","":"-"}
+    """
+    GAMEWEEK
+    """
     header_names = ["GW Pts","Transfer Cost","Average Pts","Highest Pts","GW Rank","Active Chip"]
     rows = [[
         entry_history['points'], 
@@ -57,42 +57,32 @@ def hello():
         event['average_entry_score'], 
         event['highest_score'],
         "{:,}".format(entry_history['rank']),
-        active_chip_name[active_chip]
+        active_chip
         ]]
     left_headers.append(header_names)
     left_rows.append(rows)
     table_title_list.append(event['name'])
 
-    ################################################################################
-    ## TEAM
-    ################################################################################
-    data = json.loads(obj.get_picks_data())
+    """
+    TEAM
+    """
+    data = obj.get_user_gameweek_team_picks()
     header_names = ["Position","Name","Role","Points","Cost","News"]
     json_keys = ["field_position",'web_name','role','event_points','now_cost','news']
-    rows = [ [each[json_keys[i]] for i in range(len(header_names))] for each in data]
+    rows = [ [each[key] for key in json_keys] for each in data]
     left_headers.append(header_names)
     left_rows.append(rows)
     table_title_list.append("Team Details")
 
-    ################################################################################
-    ## LEAGUES
-    ################################################################################
+    """
+    LEAGUES
+    """
     league_tables = OrderedDict()
     league_headers = ["ID","League Name","Current Rank","Last Rank","Change"]
-    json_keys = ["id","name","entry_rank","entry_last_rank","entry_movement"]
-    entry_movement_symbol = {"up":"🠉","down":"🠋","same":"●","new":"new"}
-
-    h2h = user_leagues['h2h']
-    classic = user_leagues['classic']
-    
-    for each in h2h:
-        each['entry_movement'] = entry_movement_symbol[each["entry_movement"]]
-    for each in classic:
-        each['entry_movement'] = entry_movement_symbol[each["entry_movement"]]  
-
-    league_tables["Head-to-Head Leagues"] = [ [each[key] for key in json_keys] for each in h2h]
-    league_tables["Classic Leagues"] = [ [each[key] for key in json_keys] for each in classic if each['league_type']!='s']
-    league_tables["Global Leagues"] = [ [each[key] for key in json_keys] for each in classic if each['league_type']=='s']  
+    json_keys = ["id","name","entry_rank","entry_last_rank","entry_movement_symbol"]
+    league_tables["Head-to-Head Leagues"] = [ [each[key] for key in json_keys] for each in user_leagues['h2h']]
+    league_tables["Classic Leagues"] = [ [each[key] for key in json_keys] for each in user_leagues['classic'] if each['league_type']!='s']
+    league_tables["Global Leagues"]  = [ [each[key] for key in json_keys] for each in user_leagues['classic'] if each['league_type']=='s']  
     
 
     template_env = Environment(loader=FileSystemLoader(searchpath="./"))

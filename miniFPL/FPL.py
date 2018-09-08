@@ -3,29 +3,30 @@ from operator import itemgetter
 from .api_wrapper import ExtendedAPI
 
 
+def set_default(func,*argv):
+    def wrapper(team_id=argv[0],gameweek=argv[1]):
+        return func(team_id,gameweek)
+    return wrapper
+
+
 class FPL(ExtendedAPI):
     """
     Importable FPL class containing all user accessible methods. Each instance is bound to a team_id at init
-
-    Methods:
-    --------
-    get_entry_data(gameweek)
-    get_picks_data(gameweek)
-
     """
-    # team_id = None
-    # for convenience
-    # gameweek
-
 
     def __init__(self,team_id,gameweek=None):
+        # set necessary defaults (team_id mandatory)
         if gameweek is None:
             gameweek = self.get_user_entry(team_id)['current_event']
         self.gameweek = gameweek
         self.team_id = team_id
+        # now decorate all methods
+        method_list = [x for x in dir(self) if callable(getattr(self,x)) and not x.startswith("_")]
+        for method_name in method_list:
+            setattr(self, method_name, set_default(getattr(self,method_name),self.team_id,self.gameweek))
 
 
-    def get_picks_data(self,gameweek=None):
+    def get_user_gameweek_team_picks(self,team_id=None,gameweek=None,*argv):
         """
         Param:
         ------
@@ -41,17 +42,14 @@ class FPL(ExtendedAPI):
             - set player role in team in "role"
             - set player playing position in "field_position"
         """
-        if gameweek is None:
-            gameweek = self.gameweek
-        picks_data = self.get_user_gameweek_team_picks(self.team_id,gameweek)
+        picks_data = super().get_user_gameweek_team_picks(team_id,gameweek)
         picks_data = sorted(picks_data, key=itemgetter('element'))  
         element_ids = [each_data['element'] for each_data in picks_data]
-        brief_player_data = self.get_brief_player_data(element_ids)   
+        brief_player_data = self._get_brief_player_data(element_ids=element_ids)   
         # merging picks data and extra player data
-        temp=[]
         for ctd,mtd in zip(picks_data,brief_player_data):
-            temp.append({**ctd,**mtd})
-        picks_data = sorted(temp, key=itemgetter('position'))
+            ctd.update(mtd)
+        picks_data = sorted(picks_data, key=itemgetter('position'))
         # formatting output fields
         for i in range(len(picks_data)):
             # sometimes player is fit but chance_of_playing_next_round is null
@@ -81,11 +79,11 @@ class FPL(ExtendedAPI):
             elif(picks_data[i]['element_type']==4):
                 field_position = "FWD"
             picks_data[i]['field_position'] = field_position
-        return json.dumps(picks_data)
+        return picks_data
 
     
 
-    def get_brief_player_data(self,element_ids):
+    def _get_brief_player_data(self,element_ids):
 
         """
         Get some more player data for element ids
@@ -99,7 +97,7 @@ class FPL(ExtendedAPI):
         return brief_player_data
 
 
-    def get_entry_data(self,gameweek=None):
+    def get_entry_data(self,team_id=None,gameweek=None):
          # if no gameweek provided, set to self.gameweek
         if gameweek is None:
             gameweek = self.gameweek
@@ -107,3 +105,22 @@ class FPL(ExtendedAPI):
         entry_plus_league_data = self.get_user_data(self.team_id)
         entry_data = entry_plus_league_data['entry']
         return entry_data
+
+
+    """
+    modify inherited methods
+    """
+    def get_user_gameweek_team_active_chip(self,team_id,gameweek,*argv):
+        """ sets - actual name of active chip """
+        active_chip_name = {"wildcard":"Wildcard","freehit":"Free Hit","bboost":"Bench Boost","3xc":"Triple Captain","":"-"}
+        active_chip = super().get_user_gameweek_team_active_chip(team_id,gameweek)
+        return active_chip_name[active_chip]
+
+    def get_user_leagues(self,team_id,*argv):
+        """ adds - entry_movement_symbol """
+        entry_movement_symbol = {"up":"⮝","down":"⮟","same":"⚬","new":" "}
+        leagues = super().get_user_leagues(team_id)
+        for league_type in leagues:
+            for each_league in leagues[league_type]:
+                 each_league['entry_movement_symbol'] = entry_movement_symbol[each_league["entry_movement"]]
+        return leagues

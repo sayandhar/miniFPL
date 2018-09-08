@@ -11,7 +11,7 @@ class CoreAPI:
         pass
 
 
-    def get_fpl_data(self):
+    def _get_fpl_data(self):
         try:
             fpl_data = requests.get(FPL_DATA).json()
         except requests.exceptions.SSLError:
@@ -19,7 +19,7 @@ class CoreAPI:
         return fpl_data
 
 
-    def get_player_data(self,player_id):
+    def _get_player_data(self,player_id):
         try:
             player_data = requests.get(PLAYER_DATA.format(player_id)).json()
         except requests.exceptions.SSLError:
@@ -27,7 +27,7 @@ class CoreAPI:
         return player_data
 
 
-    def get_dream_team_data(self,gameweek):
+    def _get_dream_team_data(self,gameweek):
         try:
             dream_team_data = requests.get(PLAYER_DATA.format(gameweek)).json()
         except requests.exceptions.SSLError:
@@ -35,7 +35,7 @@ class CoreAPI:
         return dream_team_data
 
 
-    def get_user_gameweek_team_data(self,team_id,gameweek):
+    def _get_user_gameweek_team_data(self,team_id,gameweek):
         try:
             user_gameweek_team_data = requests.get(USER_GAMEWEEK_TEAM_DATA.format(team_id,gameweek)).json()
         except requests.exceptions.SSLError:
@@ -43,7 +43,7 @@ class CoreAPI:
         return user_gameweek_team_data
 
 
-    def get_user_data(self,team_id):
+    def _get_user_data(self,team_id):
         try:
             user_data = requests.get(USER_DATA.format(team_id)).json()
         except requests.exceptions.SSLError:
@@ -57,62 +57,55 @@ class ExtendedAPI(CoreAPI):
     """
 
     def __init__(self):
-        super.__init__()
-
-    def get_default(self,team_id=None,gameweek=None):
-        if team_id is None:
-            team_id = self.team_id
-        # if gameweek is None:
-        #     gameweek = self.gameweek
-        return team_id
+        pass
 
     """ 
-    for self.get_fpl() 
+    parse for self._get_fpl_data() 
     """
-    def get_fpl_elements(self):
-        elements = self.get_fpl_data()['elements']
+    def get_fpl_elements(self,*argv):
+        elements = self._get_fpl_data()['elements']
         return elements
 
-    def get_fpl_phases(self):
-        phases = self.get_fpl_data()['phases']
+    def get_fpl_phases(self,*argv):
+        phases = self._get_fpl_data()['phases']
         return phases
 
-    def get_fpl_events(self):
-        events = self.get_fpl_data()['events']
+    def get_fpl_events(self,*argv):
+        events = self._get_fpl_data()['events']
         return events
 
     
     """
-    for self.get_user_gameweek_team()
+    parse for self._get_user_gameweek_team_data()
     """
-    def get_user_gameweek_team_picks(self,team_id,gameweek):
-        picks = self.get_user_gameweek_team_data(team_id,gameweek)['picks']
+    def get_user_gameweek_team_picks(self,team_id,gameweek,*argv):
+        picks = self._get_user_gameweek_team_data(team_id,gameweek)['picks']
         return picks
 
-    def get_user_gameweek_team_active_chip(self,team_id,gameweek):
-        active_chip = self.get_user_gameweek_team_data(team_id,gameweek)['active_chip']
+    def get_user_gameweek_team_active_chip(self,team_id,gameweek,*argv):
+        active_chip = self._get_user_gameweek_team_data(team_id,gameweek)['active_chip']
         return active_chip
     
-    def get_user_gameweek_team_automatic_subs(self,team_id,gameweek):
-        automatic_subs = self.get_user_gameweek_team_data(team_id,gameweek)['automatic_subs']
+    def get_user_gameweek_team_automatic_subs(self,team_id,gameweek,*argv):
+        automatic_subs = self._get_user_gameweek_team_data(team_id,gameweek)['automatic_subs']
         return automatic_subs
 
-    def get_user_gameweek_team_event(self,team_id,gameweek):
-        event = self.get_user_gameweek_team_data(team_id,gameweek)['event']
+    def get_user_gameweek_team_event(self,team_id,gameweek,*argv):
+        event = self._get_user_gameweek_team_data(team_id,gameweek)['event']
         return event
 
-    def get_user_gameweek_team_entry_history(self,team_id,gameweek):
-        entry_history = self.get_user_gameweek_team_data(team_id,gameweek)['entry_history']
+    def get_user_gameweek_team_entry_history(self,team_id,gameweek,*argv):
+        entry_history = self._get_user_gameweek_team_data(team_id,gameweek)['entry_history']
         return entry_history
 
     
     """
-    for self.get_user_data()
+    parse for self._get_user_data()
     """
-    def get_user_entry(self,team_id):
-        entry = self.get_user_data(team_id)['entry']
+    def get_user_entry(self,team_id,*argv):
+        entry = self._get_user_data(team_id)['entry']
         return entry
 
-    def get_user_leagues(self,team_id):
-        leagues = self.get_user_data(team_id)['leagues']
+    def get_user_leagues(self,team_id,*argv):
+        leagues = self._get_user_data(team_id)['leagues']
         return leagues
