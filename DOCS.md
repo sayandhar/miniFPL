@@ -1,4 +1,3 @@
-### About
 FPL class contains all the methods. In addition to the parsed JSON *(obtained from FPL site)* given by ExtendedAPI, FPL extends it with additional data and sets the default values.
 
 ### Finding your Team ID & League ID
@@ -18,12 +17,12 @@ To create an FPL object, pass a team ID.
 ```
 # lets say 111 is the team id
 obj = FPL(111)
-
-# FPL sets other argument values by itself. For example, gameweek is set to current gameweek.
-# these values can also be passed explicitly
-obj = FPL(111,3)
 ```
-All FPL methods use the default values if no values are passed. However, we can pass any no. of values to these methods.
+FPL sets other argument values, like gameweek, to their default values. For example, gameweek is set to current gameweek. However, these can be passed explicitly.
+```
+obj = FPL(team_id=111, gameweek=3)
+```
+Similarly, all FPL methods use the default values if no values are passed.
 ```
 # this will give picks/team data for default team ID & gameweek(current)
 obj.get_user_gameweek_team_picks()
