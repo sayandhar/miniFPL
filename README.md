@@ -1,9 +1,9 @@
-![](https://img.shields.io/badge/-This%20no%20longer%20works%20since%20Premier%20League%20changed%20their%20API-red)  
+[![](https://img.shields.io/badge/-This%20no%20longer%20works%20since%20Premier%20League%20changed%20their%20API-red)](#)  
 [![](https://img.shields.io/badge/Use%20This%20Instead-https%3A%2F%2Fgithub.com%2Famosbastian%2Ffpl-informational)](https://github.com/amosbastian/fpl)
 
 # miniFPL
 
-A Fantasy Premier League API in Python 3
+A small Fantasy Premier League API in Python 3
 
 ### Running the demo
 Install the required python libraries.
@@ -21,7 +21,7 @@ Hit Ctrl-C to quit.
 
 Once the bottle server starts, head over to http://localhost:8080/. Enter the Team ID and click search.
 
-![Imgur](https://i.imgur.com/wmemD5x.png)
+![Demo Webpage](https://i.imgur.com/wmemD5x.png)
 
 ### Finding your Team ID & League ID
 
