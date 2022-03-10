@@ -1,5 +1,5 @@
 ![](https://img.shields.io/badge/-This%20no%20longer%20works%20since%20Premier%20League%20changed%20their%20API-red)  
-![](https://img.shields.io/badge/Use%20This%20Instead-https%3A%2F%2Fgithub.com%2Famosbastian%2Ffpl-informational)
+[![](https://img.shields.io/badge/Use%20This%20Instead-https%3A%2F%2Fgithub.com%2Famosbastian%2Ffpl-informational)](https://github.com/amosbastian/fpl)
 
 # miniFPL
 
